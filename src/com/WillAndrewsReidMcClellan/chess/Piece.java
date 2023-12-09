@@ -14,6 +14,8 @@ All work below was performed by Will Andrews and Reid McClellan
 
 package com.WillAndrewsReidMcClellan.chess;
 
+import java.util.List;
+
 public abstract class Piece
 {
     protected boolean isWhite;
@@ -35,9 +37,12 @@ public abstract class Piece
     //abstract method to check if a piece can move to a certain position
     public abstract boolean validMove(Board board, int startX, int startY, int endX, int endY);
     public abstract String getImagePath();
+    // Abstract method to get all potential moves for the piece
+    public abstract List<Move> getPotentialMoves(Board board, int startX, int startY);
 
     // Method to be called when the piece moves
-    public void move(int startX, int startY, int endX, int endY) {
+    public void move(int startX, int startY, int endX, int endY)
+    {
         this.hasMoved = true;
         // Additional logic if needed for specific pieces
     }

@@ -97,7 +97,7 @@ public class Board
         return state;
     }
 
-    /*
+
     public boolean isCheck(boolean whiteSide)
     {
         // Determine the position of the king
@@ -126,10 +126,32 @@ public class Board
         // Return a list of legal moves for the piece at position (x, y)
     }
 
-    public boolean movePutsKingInCheck(int startX, int startY, int endX, int endY)
+    public boolean movePutsKingInCheck(int startX, int startY, int endX, int endY, boolean whiteSide)
     {
-        // Temporarily make the move and check if the king is in check
-        // Undo the move afterwards
+        // Save the current state
+        Piece savedPiece = getPiece(endX, endY);
+        Piece movingPiece = getPiece(startX, startY);
+
+        // Make the move temporarily
+        board[endX][endY] = movingPiece;
+        board[startX][startY] = null;
+
+        boolean result = isCheck(whiteSide);
+
+        // Restore the state
+        board[startX][startY] = movingPiece;
+        board[endX][endY] = savedPiece;
+
+        return result;
     }
-     */
+
+    public Position findKingPosition(boolean whiteSide) {
+        for (each square on the board) {
+            Piece piece = getPiece(square);
+            if (piece instanceof King && piece.isWhite() == whiteSide) {
+                return new Position(square.x, square.y);
+            }
+        }
+        return null; // King should always be on the board, so this should not happen
+    }
 }
