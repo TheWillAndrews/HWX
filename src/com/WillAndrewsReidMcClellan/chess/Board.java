@@ -63,5 +63,73 @@ public class Board
         return board[x][y];
     }
 
-    // Additional methods like movePiece, checkStatus, etc.
+    //method to move a piece from one position to another
+    public boolean movePiece(int startX, int startY, int endX, int endY)
+    {
+        Piece piece = getPiece(startX, startY);
+
+        // Check if there is a piece and if the move is valid
+        if (piece != null && piece.validMove(this, startX, startY, endX, endY))
+        {
+            // Perform the move
+            board[endX][endY] = piece;
+            board[startX][startY] = null;
+
+            // Additional logic for special moves like castling, en passant, promotion...
+
+            return true; // Move was successful
+        }
+        return false; // Move was invalid
+    }
+
+    //method to get a simple text representation of the board for the GUI
+    public String[][] getBoardState()
+    {
+        String[][] state = new String[8][8];
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                Piece piece = board[i][j];
+                state[i][j] = (piece == null) ? "" : piece.toString(); // Replace with your representation
+            }
+        }
+        return state;
+    }
+
+    /*
+    public boolean isCheck(boolean whiteSide)
+    {
+        // Determine the position of the king
+        // Check if any opponent's pieces can attack the king's position
+        // Return true if the king is in check
+    }
+
+    public boolean isCheckMate(boolean whiteSide)
+    {
+        if (!isCheck(whiteSide))
+        {
+            return false;
+        }
+        // Check if there are any legal moves left that can remove the check
+        // If not, it's a checkmate
+    }
+
+    public boolean isStalemate(boolean whiteSide)
+    {
+        // Check if the player has no legal moves left
+        // Make sure the player is not in check
+    }
+
+    public List<Move> getLegalMoves(int x, int y)
+    {
+        // Return a list of legal moves for the piece at position (x, y)
+    }
+
+    public boolean movePutsKingInCheck(int startX, int startY, int endX, int endY)
+    {
+        // Temporarily make the move and check if the king is in check
+        // Undo the move afterwards
+    }
+     */
 }

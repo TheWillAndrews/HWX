@@ -12,7 +12,28 @@ public class Rook extends Piece
     @Override
     public boolean validMove(Board board, int startX, int startY, int endX, int endY)
     {
-        //TODO: Implement rook-specific movement logic
-        return false; //placeholder
+        if (startX != endX && startY != endY) return false; // Must move straight
+
+        // Check for obstruction
+        int direction = startX == endX ? Integer.compare(endY, startY) : Integer.compare(endX, startX);
+        int max = startX == endX ? Math.abs(startY - endY) : Math.abs(startX - endX);
+        for (int i = 1; i < max; i++) {
+            if (startX == endX)
+            {
+                if (board.getPiece(startX, startY + i * direction) != null) return false;
+            }
+            else
+            {
+                if (board.getPiece(startX + i * direction, startY) != null) return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public String getImagePath()
+    {
+        String color = isWhite ? "l" : "d";
+        return "/com/WillAndrewsReidMcClellan/chess/PieceImages/Chess_r" + color + "t60.png";
     }
 }

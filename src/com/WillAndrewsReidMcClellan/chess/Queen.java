@@ -12,7 +12,16 @@ public class Queen extends Piece
     @Override
     public boolean validMove(Board board, int startX, int startY, int endX, int endY)
     {
-        //TODO: Implement queen-specific movement logic
-        return false; //placeholder
+        // Combine logic of Rook and Bishop
+        Rook tempRook = new Rook(isWhite);
+        Bishop tempBishop = new Bishop(isWhite);
+        return tempRook.validMove(board, startX, startY, endX, endY) || tempBishop.validMove(board, startX, startY, endX, endY);
+    }
+
+    @Override
+    public String getImagePath()
+    {
+        String color = isWhite ? "l" : "d";
+        return "/com/WillAndrewsReidMcClellan/chess/PieceImages/Chess_q" + color + "t60.png";
     }
 }
