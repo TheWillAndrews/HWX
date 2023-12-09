@@ -76,8 +76,23 @@ public class King extends Piece
 
     private boolean squareUnderAttack(Board board, int x, int y)
     {
-        // You'll need to implement this method to check if a given square (x, y) is under attack
-        // This involves checking if any of the opponent's pieces can move to (x, y)
+        boolean isWhite = this.isWhite();
+        for (int i = 0; i < 8; i++)
+        {
+            for (int j = 0; j < 8; j++)
+            {
+                Piece piece = board.getPiece(i, j);
+                if (piece != null && piece.isWhite() != isWhite)
+                {
+                    // If an opponent's piece can legally move to the square, it's under attack
+                    if (piece.validMove(board, i, j, x, y))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @Override

@@ -21,6 +21,9 @@ public abstract class Piece
     protected boolean isWhite;
     protected boolean hasMoved; // Track if the piece has moved (useful for pawns, kings, and rooks)
 
+    private int x;
+    private int y;
+
     //constructor for a chess piece
     public Piece(boolean isWhite)
     {
@@ -52,5 +55,19 @@ public abstract class Piece
         return hasMoved;
     }
 
-    // Additional common methods for chess pieces
+    public void setPosition(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
+
+    public int getX()
+    {
+        return x;
+    }
+
+    public int getY()
+    {
+        return y;
+    }
 }

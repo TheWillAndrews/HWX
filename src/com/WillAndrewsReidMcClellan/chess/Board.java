@@ -15,6 +15,9 @@ All work below was performed by Will Andrews and Reid McClellan
 
 package com.WillAndrewsReidMcClellan.chess;
 
+import java.util.List;
+import java.util.ArrayList;
+
 public class Board
 {
     private Piece[][] board;
@@ -100,9 +103,31 @@ public class Board
 
     public boolean isCheck(boolean whiteSide)
     {
-        // Determine the position of the king
-        // Check if any opponent's pieces can attack the king's position
-        // Return true if the king is in check
+        Piece king = findKing(whiteSide);
+        if (king == null)
+        {
+            // Handle error: King not found on the board
+            return false;
+        }
+
+        int kingX = king.getX();
+        int kingY = king.getY();
+
+        for (int i = 0; i < board.length; i++)
+        {
+            for (int j = 0; j < board[i].length; j++)
+            {
+                Piece piece = board[i][j];
+                if (piece != null && piece.isWhite() != whiteSide)
+                {
+                    if (piece.validMove(this, i, j, kingX, kingY))
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     public boolean isCheckMate(boolean whiteSide)
@@ -111,19 +136,74 @@ public class Board
         {
             return false;
         }
-        // Check if there are any legal moves left that can remove the check
-        // If not, it's a checkmate
+        // Check all pieces of the current player to see if any can make a move
+        // that would take the king out of check.
+        for (Piece[] row : board)
+        {
+            for (Piece piece : row)
+            {
+                if (piece != null && piece.isWhite() == whiteSide)
+                {
+                    List<Move> moves = getLegalMoves(piece.getX(), piece.getY());
+                    for (Move move : moves)
+                    {
+                        if (!movePutsKingInCheck(piece.getX(), piece.getY(), move.getEndX(), move.getEndY(), whiteSide))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public boolean isStalemate(boolean whiteSide)
     {
-        // Check if the player has no legal moves left
-        // Make sure the player is not in check
+        if (isCheck(whiteSide))
+        {
+            return false;
+        }
+
+        for (Piece[] row : board)
+        {
+            for (Piece piece : row)
+            {
+                if (piece != null && piece.isWhite() == whiteSide)
+                {
+                    List<Move> moves = getLegalMoves(piece.getX(), piece.getY());
+                    for (Move move : moves)
+                    {
+                        if (!movePutsKingInCheck(piece.getX(), piece.getY(), move.getEndX(), move.getEndY(), whiteSide))
+                        {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public List<Move> getLegalMoves(int x, int y)
     {
-        // Return a list of legal moves for the piece at position (x, y)
+        List<Move> legalMoves = new ArrayList<>();
+        Piece piece = board[x][y];
+
+        if (piece == null)
+        {
+            return legalMoves;
+        }
+
+        List<Move> potentialMoves = piece.getPotentialMoves(this, x, y);
+        for (Move move : potentialMoves)
+        {
+            if (piece.validMove(this, x, y, move.getEndX(), move.getEndY()))
+            {
+                legalMoves.add(move);
+            }
+        }
+        return legalMoves;
     }
 
     public boolean movePutsKingInCheck(int startX, int startY, int endX, int endY, boolean whiteSide)
@@ -145,13 +225,19 @@ public class Board
         return result;
     }
 
-    public Position findKingPosition(boolean whiteSide) {
-        for (each square on the board) {
-            Piece piece = getPiece(square);
-            if (piece instanceof King && piece.isWhite() == whiteSide) {
-                return new Position(square.x, square.y);
+    public Piece findKing(boolean whiteSide)
+    {
+        for (int x = 0; x < board.length; x++)
+        {
+            for (int y = 0; y < board[x].length; y++)
+            {
+                Piece piece = board[x][y];
+                if (piece instanceof King && piece.isWhite() == whiteSide)
+                {
+                    return piece;
+                }
             }
         }
-        return null; // King should always be on the board, so this should not happen
+        return null; // King not found
     }
 }
